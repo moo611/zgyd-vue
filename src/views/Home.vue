@@ -7,18 +7,18 @@
       <el-menu active-text-color="#ffd04b" background-color="#545c64" class="el-menu-vertical-demo" default-active="0"
         text-color="#fff" @select="handleSelect">
         <el-menu-item index="0">
-          <el-icon><icon-menu /></el-icon>
+          <el-icon><location /></el-icon>
           <span>路线规划</span>
         </el-menu-item>
         <el-menu-item index="1">
           <el-icon>
-            <document />
+            <school />
           </el-icon>
           <span>节点管理</span>
         </el-menu-item>
         <el-menu-item index="2">
           <el-icon>
-            <setting />
+            <compass />
           </el-icon>
           <span>路线管理</span>
         </el-menu-item>
