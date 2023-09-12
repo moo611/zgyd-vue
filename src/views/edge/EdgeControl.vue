@@ -1,5 +1,5 @@
 <template>
-  <div class="div-edge-main">
+  <div class="div-edge-main" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="div-edge-header">
       <el-input class="et-text" v-model="state.query" placeholder="请输入边名称" />
       <el-button class="btn-search" type="primary" plain @click="searchEdge">查询</el-button>
@@ -98,6 +98,7 @@ import { ElMessage } from 'element-plus'
 
 const formLabelWidth = '140px'
 
+const fullscreenLoading = ref(false)
 //变量
 const state = reactive({
   fixed: true,
@@ -129,14 +130,17 @@ const searchEdge = () => {
 }
 
 const getEdgePage = () => {
+  fullscreenLoading.value = true
   let param = { page: state.page, count: state.count, query: state.query }
   edgeStore.getEdgePage(param).then((res) => {
-
+    fullscreenLoading.value = false
     state.edges = res.list
     state.total = res.total
     console.log(state.edges)
   }).catch((error) => {
     console.log(error)
+    fullscreenLoading.value = false
+    ElMessage.error("获取边列表失败")
   })
 
 }
@@ -146,11 +150,12 @@ const addEdge = () => {
   edgeStore.addEdge(param).then((res) => {
     getEdgePage()
     ElMessage({
-      message: '更新节点成功',
+      message: '添加边成功',
       type: 'success',
     })
   }).catch((error) => {
     console.log(error)
+    ElMessage.error("添加边失败")
   })
 }
 
@@ -160,11 +165,12 @@ const updateEdge = () => {
   edgeStore.updateEdge(param).then((res) => {
     getEdgePage()
     ElMessage({
-      message: '更新节点成功',
+      message: '更新边成功',
       type: 'success',
     })
   }).catch((error) => {
     console.log(error)
+    ElMessage.error("更新边失败")
   })
 }
 
@@ -173,11 +179,12 @@ const deleteEdge = (id) => {
   edgeStore.deleteEdge(id).then((res) => {
     getEdgePage()
     ElMessage({
-      message: '删除节点成功',
+      message: '删除边成功',
       type: 'success',
     })
   }).catch((error) => {
     console.log(error)
+    ElMessage.error("删除边失败")
   })
 }
 
@@ -213,6 +220,7 @@ onMounted(() => {
 .div-edge-main{
   position: relative;
   overflow-x: hidden;
+  overflow-y: auto;
   height: 100%;
   width: 100%;
 }

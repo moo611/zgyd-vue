@@ -1,5 +1,5 @@
 <template>
-  <div class="div-node-main">
+  <div class="div-node-main" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="div-node-header">
       <el-input class="et-text" v-model="state.query" placeholder="请输入节点名称" />
       <el-button class="btn-search" type="primary" plain @click="searchNode">查询</el-button>
@@ -20,7 +20,8 @@
     </el-table>
 
     <div class="example-pagination-block">
-      <el-pagination layout="prev, pager, next" :total="state.total" :page-size="state.count" @current-change="pageChange"/>
+      <el-pagination layout="prev, pager, next" :total="state.total" :page-size="state.count"
+        @current-change="pageChange" />
     </div>
 
   </div>
@@ -64,10 +65,10 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const formLabelWidth = '140px'
-
+const fullscreenLoading = ref(false)
 //变量
 const state = reactive({
-  total:0,
+  total: 0,
   page: 1,
   count: 8,
   query: '',
@@ -85,14 +86,17 @@ const searchNode = () => {
 }
 
 const getNodePage = () => {
+  fullscreenLoading.value = true
   let param = { page: state.page, count: state.count, query: state.query }
   nodeStore.getNodePage(param).then((res) => {
 
     state.nodes = res.list
     state.total = res.total
     console.log(state.nodes)
+    fullscreenLoading.value = false
   }).catch((error) => {
     console.log(error)
+    fullscreenLoading.value = false
   })
 
 }
@@ -107,6 +111,7 @@ const addNode = () => {
     })
   }).catch((error) => {
     console.log(error)
+    ElMessage.error("添加节点失败")
   })
 }
 
@@ -121,6 +126,7 @@ const updateNode = () => {
     })
   }).catch((error) => {
     console.log(error)
+    ElMessage.error("更新节点失败")
   })
 }
 
@@ -134,6 +140,7 @@ const deleteNode = (id) => {
     })
   }).catch((error) => {
     console.log(error)
+    ElMessage.error("删除节点失败")
   })
 }
 
@@ -149,7 +156,7 @@ const handleDelete = (index, row) => {
   deleteNode(row.id)
 
 }
-const pageChange=(number)=>{
+const pageChange = (number) => {
   state.page = number
   getNodePage()
 }
@@ -210,7 +217,7 @@ onMounted(() => {
   margin-right: 10px;
 }
 
-.example-pagination-block{
+.example-pagination-block {
   /* position: absolute;
   bottom: 30px;
   left: 180px; */

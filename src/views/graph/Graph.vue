@@ -1,5 +1,5 @@
 <template>
-  <div class="div-graph-main">
+  <div class="div-graph-main" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="div-graph-header">
       <el-select v-model="state.form.sid" placeholder="请选择起点" class="my-select">
         <el-option v-for="(item, index) in state.nodes" :key="index" :label="item.name" :value="item.id" />
@@ -9,7 +9,7 @@
         <el-option v-for="(item, index) in state.nodes" :key="index" :label="item.name" :value="item.id" />
 
       </el-select>
-      <el-select v-model="state.form.sid" placeholder="级别限制" class="my-select">
+      <el-select v-model="state.level" placeholder="级别限制" class="my-select">
         <el-option v-for="(item, index) in state.levels" :key="index" :label="item.name" :value="item.id" />
 
       </el-select>
@@ -20,7 +20,15 @@
 
     <el-table :data="state.graphs" style="width: 100%" class="my-table">
       <el-table-column type="index" label="编号" width="80" />
-      <el-table-column prop="routes" label="路线名称" width="500" />
+      <el-table-column prop="routes" label="路线名称" width="500" >
+
+        <template #default="scope">
+        <span>{{ getRouteName(scope.row.routeNames) }}</span>
+      </template>
+
+      </el-table-column>
+      
+
       <el-table-column prop="sum" label="衰耗" width="80" />
     </el-table>
     <div class="example-pagination-block">
@@ -33,7 +41,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import userStore from '../../stores';
-
+import { ElMessage } from 'element-plus'
+const fullscreenLoading = ref(false)
 const { nodeStore, graphStore } = userStore()
 const state = reactive({
   total: 0,
@@ -55,7 +64,17 @@ const searchGraph = () => {
   state.page = 1
   getGraphs()
 }
-
+const getRouteName=(routes)=>{
+  var res = "";
+  var i = 0
+  for (i ;i<routes.length; i++){
+      res += routes[i]
+    if(i!=routes.length-1){
+      res += "->"
+    }
+  }
+  return res
+}  
 const pageChange = (number) => {
   state.page = number
   getGraphs()
@@ -71,14 +90,18 @@ const getAllNodes = () => {
 }
 
 const getGraphs = () => {
+  fullscreenLoading.value = true
   let param = state.form
-  if (state.level) {
+  if (state.level && state.level !== 0) {
     param.level = state.level
   }
   graphStore.getGraphs(param).then((res) => {
     state.graphs = res.list
+    fullscreenLoading.value = false
   }).catch((error) => {
     console.log(error)
+    fullscreenLoading.value = false
+    ElMessage.error("获取列表失败")
   })
 
 }
