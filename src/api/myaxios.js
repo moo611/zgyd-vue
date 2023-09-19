@@ -6,7 +6,7 @@ import axios from "axios";
 //   timeout: 3000,
 // });
 let myaxios = axios.create({
-  baseURL: 'http://8.130.95.118:8080',
+  baseURL: 'http://8.130.95.118/api',
   timeout: 3000,
 })
 
