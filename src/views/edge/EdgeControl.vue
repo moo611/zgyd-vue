@@ -221,7 +221,7 @@ onMounted(() => {
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 100%;
+  height: 500px;
   width: 100%;
 }
 .div-edge-header {
