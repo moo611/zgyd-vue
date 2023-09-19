@@ -1,11 +1,11 @@
 <template>
   <div class="div-graph-main" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="div-graph-header">
-      <el-select v-model="state.form.sid" placeholder="请选择起点" class="my-select">
+      <el-select v-model="state.form.sid" filterable placeholder="请选择起点" class="my-select">
         <el-option v-for="(item, index) in state.nodes" :key="index" :label="item.name" :value="item.id" />
 
       </el-select>
-      <el-select v-model="state.form.tid" placeholder="请选择终点" class="my-select">
+      <el-select v-model="state.form.tid" filterable placeholder="请选择终点" class="my-select">
         <el-option v-for="(item, index) in state.nodes" :key="index" :label="item.name" :value="item.id" />
 
       </el-select>

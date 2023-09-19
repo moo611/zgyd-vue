@@ -4,7 +4,7 @@
       <span>中国移动管理系统</span>
     </div>
     <div class="div-body">
-      <el-menu active-text-color="#ffd04b" background-color="#545c64" class="el-menu-vertical-demo" default-active="0"
+      <el-menu active-text-color="#ffd04b" background-color="#545c64" class="el-menu-vertical-demo" :default-active="activeIndex"
         text-color="#fff" @select="handleSelect">
         <el-menu-item index="0">
           <el-icon><location /></el-icon>
@@ -35,7 +35,10 @@
 </template>
 
 <script lang="ts" setup>
+import { watch,ref } from "vue";
 import { useRouter } from "vue-router";
+
+const activeIndex = ref('0')
 const router = useRouter()
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -49,6 +52,21 @@ const handleSelect = (key: string, keyPath: string[]) => {
   }
 
 }
+
+watch(
+  () => router.currentRoute.value,
+  (newValue: any) => {
+    console.log('newValue',newValue)
+    if (newValue.name === "graph"){
+      activeIndex.value = '0'
+    }else if(newValue.name === "node"){
+      activeIndex.value = '1'
+    }else if(newValue.name === "edge"){
+      activeIndex.value = '2'
+    }
+  },
+  { immediate: true }
+)
 
 </script>
 
